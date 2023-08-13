@@ -275,6 +275,7 @@ fork(void)
   }
   np->sz = p->sz;
 
+
   np->parent = p;
 
   // copy saved user registers.
@@ -294,6 +295,7 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+  np->mask = p->mask;
 
   release(&np->lock);
 
@@ -693,3 +695,21 @@ procdump(void)
     printf("\n");
   }
 }
+//lab2-2
+uint64
+nproc(void)
+{
+  struct proc *p;
+  uint64 num = 0;
+  for (p = proc; p < &proc[NPROC]; p++)
+  {
+    acquire(&p->lock);
+    if (p->state != UNUSED)
+    {
+      num++;
+    }
+    release(&p->lock);
+  }
+  return num;
+}
+
