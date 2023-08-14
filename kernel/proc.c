@@ -112,6 +112,13 @@ found:
     release(&p->lock);
     return 0;
   }
+//lab4-3
+if((p->pre_trapframe = (struct trapframe *)kalloc()) == 0){
+    freeproc(p);
+    release(&p->lock);
+    return 0;
+  }
+
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
@@ -138,6 +145,11 @@ freeproc(struct proc *p)
 {
   if(p->trapframe)
     kfree((void*)p->trapframe);
+
+//lab4-3
+if(p->pre_trapframe)
+    kfree((void*)p->pre_trapframe);
+
   p->trapframe = 0;
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
