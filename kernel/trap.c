@@ -67,7 +67,32 @@ usertrap(void)
     syscall();
   } else if((which_dev = devintr()) != 0){
     // ok
-  } else {
+  } else if(r_scause() == 15 || r_scause() == 13) {
+    uint64 addr, pa;
+    pte_t *pte;
+    uint flags;
+    char *mem;
+    addr = r_stval();
+    addr = PGROUNDDOWN(addr);
+    pte = walk(p->pagetable, addr, 0);
+    if(pte == 0) {
+      p->killed = 1;
+    } else {
+    if(PTE_FLAGS(*pte) & PTE_C && (*pte & PTE_V) != 0) { //当PTE存在切PTE为COW页面时
+    pa = PTE2PA(*pte);
+    flags = (PTE_FLAGS(*pte) | PTE_W) & ~PTE_C;//新页面的标志位设置为非COW页面且可写
+    if((mem = kalloc()) == 0) { //创建新的页面
+      p->killed = 1;
+      }else {
+        memmove(mem, (char*)pa, PGSIZE);
+        *pte = PA2PTE(mem) | flags;
+        kfree((void *)pa);
+      }
+    } else {
+      p->killed = 1;
+    }
+   }
+  }else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
     p->killed = 1;
