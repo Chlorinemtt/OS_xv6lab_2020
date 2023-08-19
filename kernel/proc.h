@@ -41,6 +41,20 @@ extern struct cpu cpus[NCPU];
 // the trapframe includes callee-saved user registers like s0-s11 because the
 // return-to-user path via usertrapret() doesn't return through
 // the entire kernel call stack.
+
+
+struct VMA { //增加关于VMA的定义
+  uint64 addr; // VMA的开始地址
+  uint64 length; // VMA的长度
+  int prot; // VMA的保护位，这里可以为read/write/read_write
+  int flags; // VMA的标志位，这里可以为MapShared和MapPrivate，如果为MapShared，则在内存中的脏数据需要写回至文件，否则，不需要写回文件
+  int offset; // 调用mmap时，指定文件的offset值
+  int valid; // 当前此VMA是否有效。1表示有效，即该VMA当前已经被使用，0表示无效，即该VMA当前还未被使用
+  uint64 bitmap; // 此VMA代表的连续空间内，哪些页面已经被映射，哪些页面还未被映射
+  struct file* f; // 映射的文件
+};
+
+
 struct trapframe {
   /*   0 */ uint64 kernel_satp;   // kernel page table
   /*   8 */ uint64 kernel_sp;     // top of process's kernel stack
@@ -103,4 +117,5 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+   struct VMA vma[16];
 };
