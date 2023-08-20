@@ -23,7 +23,6 @@ thread_switch:
 	sd s10,96(a0)
 	sd s11,104(a0)
 
-
 	ld ra,0(a1)
 	ld sp,8(a1)
 	ld s0,16(a1)

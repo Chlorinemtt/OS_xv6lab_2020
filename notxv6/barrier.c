@@ -42,8 +42,6 @@ if(nthread == bstate.nthread){
 }
 
 pthread_mutex_unlock(&(bstate.barrier_mutex));
-
-
   
 }
 
