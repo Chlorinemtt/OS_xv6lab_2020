@@ -108,6 +108,11 @@ found:
   p->pid = allocpid();
 
   // Allocate a trapframe page.
+
+  
+
+
+
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
     release(&p->lock);
     return 0;
