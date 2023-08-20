@@ -326,9 +326,6 @@ fork(void)
   np->sz = p->sz;
 
   //lab3-3
-
-
-
   np->parent = p;
 
   // copy saved user registers.
