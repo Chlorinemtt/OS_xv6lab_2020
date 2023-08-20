@@ -56,8 +56,7 @@ kfree(void *pa)
     panic("kfree");
  acquire(&kmem.lock);
   kmem.refpag[(uint64)pa/PGSIZE]--;
-  if(kmem.refpag[(uint64)pa/PGSIZE] <= 0) { //只有当物理地址的引用为0时，我们才清除他。
-  // Fill with junk to catch dangling refs.
+  if(kmem.refpag[(uint64)pa/PGSIZE] <= 0) { 
   memset(pa, 1, PGSIZE);
 
   r = (struct run*)pa;

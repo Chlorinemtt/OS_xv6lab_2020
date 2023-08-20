@@ -78,10 +78,10 @@ usertrap(void)
     if(pte == 0) {
       p->killed = 1;
     } else {
-    if(PTE_FLAGS(*pte) & PTE_C && (*pte & PTE_V) != 0) { //当PTE存在切PTE为COW页面时
+    if(PTE_FLAGS(*pte) & PTE_C && (*pte & PTE_V) != 0) { 
     pa = PTE2PA(*pte);
-    flags = (PTE_FLAGS(*pte) | PTE_W) & ~PTE_C;//新页面的标志位设置为非COW页面且可写
-    if((mem = kalloc()) == 0) { //创建新的页面
+    flags = (PTE_FLAGS(*pte) | PTE_W) & ~PTE_C;
+    if((mem = kalloc()) == 0) { 
       p->killed = 1;
       }else {
         memmove(mem, (char*)pa, PGSIZE);

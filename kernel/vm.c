@@ -333,9 +333,9 @@ if(mappages(new, i, PGSIZE, (uint64)pa, flags) != 0){ //将原来PTE映射的物
       //kfree(mem);
       goto err;
     }
-    *pte &= (~PTE_W); //清除写标志位
-    *pte |= PTE_C;//设置COW标志位
-    addref(pa);//物理地址的引用加一
+    *pte &= (~PTE_W); 
+    *pte |= PTE_C;
+    addref(pa);
   }
   return 0;
 
@@ -378,8 +378,8 @@ if(va0 >= MAXVA) return -1;
       return -1;
     if((*pte & PTE_V) == 0)
       return -1;
-    if(PTE_FLAGS(*pte) & PTE_C) { //当PTE存在且为COW
-      flags = (PTE_FLAGS(*pte) | PTE_W) & ~PTE_C;//设置为可写且非COW
+    if(PTE_FLAGS(*pte) & PTE_C) { 
+      flags = (PTE_FLAGS(*pte) | PTE_W) & ~PTE_C;
       if((mem = kalloc()) == 0) return -1;
       else {
       memmove(mem, (char*)pa0, PGSIZE);
