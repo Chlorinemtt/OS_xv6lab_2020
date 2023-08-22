@@ -1,0 +1,4 @@
+Explain the output of vmprint in terms of Fig 3-4 from the text. What does page 0 contain? What is in page 2? When running in user mode, could the process read/write the memory mapped by page 1?
+page 0 中保存的是第 2 级页表的起始地址，以及权限位
+page 2 中保存的是实际物理地址的页号，以及权限位
+用户态下访问不到这里 page 1映射的地址空间，因为用户态和内核态使用的不是同一个页表，翻译得到的物理地址不同
